@@ -1,6 +1,6 @@
-using Catalogo.API.Domain;
+using Catalog.API.Domain;
 
-namespace Catalogo.API.Repositories;
+namespace Catalog.API.Repositories;
 
 public interface IProdutoRepository
 {

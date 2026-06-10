@@ -1,0 +1,25 @@
+# cadastrar preço do produto (Teclado Mecânico Wireless)
+POST http://localhost:5002/precos
+Content-Type: application/json
+
+{ "produtoId": "6a29eeae98595fd90b901bb7", "valor": 349.90 }
+
+###
+
+# cadastrar preço do produto (Monitor 27)
+POST http://localhost:5002/precos
+Content-Type: application/json
+
+{ "produtoId": "6a29eed198595fd90b901bb8", "valor": 525.50 }
+
+###
+
+# listar preço do produto 1
+GET http://localhost:5002/precos/6a29eeae98595fd90b901bb7
+
+###
+
+# listar preço do produto 2
+GET http://localhost:5002/precos/6a29eed198595fd90b901bb8
+
+

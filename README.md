@@ -1,57 +1,84 @@
-## Módulo 1 — Fundamentos de Microserviços e Comunicação Síncrona
+# .NET Microservices Lab
 
-Neste primeiro módulo foi implementada uma arquitetura básica de microserviços utilizando .NET 10, com foco na separação de responsabilidades, persistência distribuída e comunicação entre serviços.
+This repository documents my hands-on journey learning microservices architecture with .NET.
 
-O projeto é composto por dois microserviços independentes:
+The project evolves through multiple modules, covering service-to-service communication, distributed data management, caching, messaging, containerization, orchestration, and cloud-native practices. Each module introduces new concepts and technologies commonly used in modern distributed systems.
 
-* **Catalogo.API**: responsável pelo gerenciamento dos produtos e persistência dos dados no MongoDB.
-* **Precos.API**: responsável pelo fornecimento de preços dos produtos, utilizando Redis para cache distribuído.
+### Topics Covered
 
-A comunicação entre os serviços foi implementada de forma síncrona via HTTP utilizando Refit, permitindo que o Catálogo consulte informações de preço diretamente no microserviço especializado.
+- ASP.NET Core Minimal APIs
+- MongoDB
+- Redis
+- Refit
+- Docker
+- RabbitMQ
+- Kubernetes
+- Cloud-Native Architecture
+- Distributed Systems Patterns
 
-### Principais implementações
 
-* Arquitetura baseada em microserviços
-* APIs desenvolvidas com ASP.NET Core Minimal APIs
-* Persistência de dados com MongoDB
-* Cache distribuído com Redis
-* Comunicação entre microserviços utilizando Refit
-* Injeção de dependência (Dependency Injection)
+## Module 1 — Microservices Fundamentals and Synchronous Communication
+
+In this first module, a basic microservices architecture was implemented using .NET 10, focusing on separation of concerns, distributed persistence, and inter-service communication.
+
+The solution is composed of two independent microservices:
+
+* **Catalog.API**: responsible for product management and data persistence using MongoDB.
+* **Pricing.API**: responsible for providing product pricing information, using Redis as a distributed cache.
+
+Communication between the services was implemented synchronously over HTTP using Refit, allowing the Catalog service to retrieve pricing information directly from the specialized Pricing service.
+
+### Key Implementations
+
+* Microservices-based architecture
+* APIs built with ASP.NET Core Minimal APIs
+* Data persistence with MongoDB
+* Distributed caching with Redis
+* Inter-service communication using Refit
+* Dependency Injection
 * Repository Pattern
 * Service Layer
-* Conteinerização com Docker
+* Containerization with Docker
 
-### Competências desenvolvidas
+### Skills and Concepts Developed
 
-* Design e separação de responsabilidades em microserviços
-* Comunicação síncrona entre serviços
-* Persistência NoSQL com MongoDB
-* Estratégias de cache com Redis
-* Estruturação de APIs modernas utilizando Minimal APIs
-* Organização de projetos seguindo boas práticas de arquitetura em .NET
+* Microservices design and separation of responsibilities
+* Synchronous service-to-service communication
+* NoSQL data persistence with MongoDB
+* Distributed caching strategies with Redis
+* Building modern APIs using Minimal APIs
+* Structuring .NET applications following architectural best practices
 
 
-Módulo 1 ✅
-├── Comunicação síncrona entre microserviços
-├── MongoDB
-├── Redis
-├── Refit
-└── Docker
 
-Módulo 2 🚧
-├── RabbitMQ
-├── Comunicação assíncrona
-├── Event Driven Architecture
-└── Resiliência
+## Roadmap
 
-Módulo 3 📅
-├── Kubernetes
-├── Observabilidade
-├── Health Checks
-└── Escalabilidade
+### Module 1 — Synchronous Communication ✅
 
-Módulo 4 📅
-├── Deploy em Cloud
-├── CI/CD
-├── Monitoramento
-└── Ambiente de Produção
+* [x] Catalog.API
+* [x] Pricing.API
+* [x] MongoDB Persistence
+* [x] Redis Distributed Cache
+* [x] Refit HTTP Client
+* [x] Docker Containers
+
+### Module 2 — Event-Driven Architecture 🚧
+
+* [ ] RabbitMQ
+* [ ] Asynchronous Communication
+* [ ] Publish/Subscribe Pattern
+* [ ] Resilience Patterns
+
+### Module 3 — Container Orchestration 📅
+
+* [ ] Kubernetes
+* [ ] Observability
+* [ ] Health Checks
+* [ ] Scalability
+
+### Module 4 — Cloud-Native Deployment 📅
+
+* [ ] Cloud Deployment
+* [ ] CI/CD Pipeline
+* [ ] Monitoring
+* [ ] Production Environment

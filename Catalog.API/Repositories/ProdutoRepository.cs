@@ -1,8 +1,8 @@
-using Catalogo.API.Domain;
-using Catalogo.API.Infrastructure;
+using Catalog.API.Domain;
+using Catalog.API.Infrastructure;
 using MongoDB.Driver;
 
-namespace Catalogo.API.Repositories;
+namespace Catalog.API.Repositories;
 
 public class ProdutoRepository : IProdutoRepository
 {

@@ -1,4 +1,4 @@
-namespace Precos.API.Contracts.Responses;
+namespace Pricing.API.Contracts.Responses;
 
 public record PrecoResponse(
     string ProdutoId,

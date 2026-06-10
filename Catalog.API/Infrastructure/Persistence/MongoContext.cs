@@ -1,7 +1,7 @@
-using Catalogo.API.Domain;
+using Catalog.API.Domain;
 using MongoDB.Driver;
 
-namespace Catalogo.API.Infrastructure;
+namespace Catalog.API.Infrastructure;
 
 public class MongoContext
 {

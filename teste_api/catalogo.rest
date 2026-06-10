@@ -1,0 +1,38 @@
+# usando rest client
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+### cadastrar um produto
+POST http://localhost:5001/produtos
+Content-Type: application/json
+
+{
+  "nome": "Teclado Mecânico Wireless",
+  "descricao": "Switch Brown ABNT2"
+}
+
+###
+
+### cadastrar produto 2
+POST http://localhost:5001/produtos
+Content-Type: application/json
+
+{
+  "nome": "Monitor 27",
+  "descricao": "144hz IPS"
+}
+
+###
+
+# listar produto 1
+GET http://localhost:5001/detalhes-produto/6a29eeae98595fd90b901bb7
+
+###
+
+# listar produtos 2
+GET http://localhost:5001/detalhes-produto/6a29eed198595fd90b901bb8
+
+###
+
+# listar todos os produtos
+GET http://localhost:5001/produtos
+

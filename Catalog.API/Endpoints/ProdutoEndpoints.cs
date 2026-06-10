@@ -1,10 +1,10 @@
-using Catalogo.API.Contracts.Requests;
-using Catalogo.API.Contracts.Responses;
-using Catalogo.API.Infrastructure.Clients;
-using Catalogo.API.Services;
+using Catalog.API.Contracts.Requests;
+using Catalog.API.Contracts.Responses;
+using Catalog.API.Infrastructure.Clients;
+using Catalog.API.Services;
 using Refit;
 
-namespace Catalogo.API.Endpoints;
+namespace Catalog.API.Endpoints;
 
 public static class ProdutoEndpoints
 {

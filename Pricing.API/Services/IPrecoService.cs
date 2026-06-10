@@ -1,6 +1,6 @@
-using Precos.API.Contracts.Responses;
+using Pricing.API.Contracts.Responses;
 
-namespace Precos.API.Services;
+namespace Pricing.API.Services;
 
 public interface IPrecoService
 {

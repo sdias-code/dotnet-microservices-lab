@@ -1,7 +1,7 @@
-using Catalogo.API.Domain;
-using Catalogo.API.Repositories;
+using Catalog.API.Domain;
+using Catalog.API.Repositories;
 
-namespace Catalogo.API.Services;
+namespace Catalog.API.Services;
 
 public class ProdutoService : IProdutoService
 {

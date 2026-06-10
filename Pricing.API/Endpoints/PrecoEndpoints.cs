@@ -1,7 +1,7 @@
-using Precos.API.Contracts.Requests;
-using Precos.API.Services;
+using Pricing.API.Contracts.Requests;
+using Pricing.API.Services;
 
-namespace Precos.API.Endpoints;
+namespace Pricing.API.Endpoints;
 
 public static class PrecoEndpoints
 {

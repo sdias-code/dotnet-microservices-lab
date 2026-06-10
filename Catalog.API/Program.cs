@@ -1,8 +1,8 @@
-using Catalogo.API.Endpoints;
-using Catalogo.API.Infrastructure;
-using Catalogo.API.Infrastructure.Clients;
-using Catalogo.API.Repositories;
-using Catalogo.API.Services;
+using Catalog.API.Endpoints;
+using Catalog.API.Infrastructure;
+using Catalog.API.Infrastructure.Clients;
+using Catalog.API.Repositories;
+using Catalog.API.Services;
 using MongoDB.Driver;
 using Refit;
 

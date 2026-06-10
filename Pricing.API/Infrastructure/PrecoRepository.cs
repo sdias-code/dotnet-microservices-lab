@@ -1,8 +1,8 @@
 using System.Globalization;
 using Microsoft.Extensions.Caching.Distributed;
-using Precos.API.Domain;
+using Pricing.API.Domain;
 
-namespace Precos.API.Infrastructure;
+namespace Pricing.API.Infrastructure;
 
 public class PrecoRepository : IPrecoRepository
 {

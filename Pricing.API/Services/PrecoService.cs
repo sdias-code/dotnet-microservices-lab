@@ -1,8 +1,8 @@
-using Precos.API.Contracts.Responses;
-using Precos.API.Domain;
-using Precos.API.Infrastructure;
+using Pricing.API.Contracts.Responses;
+using Pricing.API.Domain;
+using Pricing.API.Infrastructure;
 
-namespace Precos.API.Services;
+namespace Pricing.API.Services;
 
 public class PrecoService : IPrecoService
 {

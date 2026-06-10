@@ -1,6 +1,6 @@
-using Catalogo.API.Domain;
+using Catalog.API.Domain;
 
-namespace Catalogo.API.Services;
+namespace Catalog.API.Services;
 
 public interface IProdutoService
 {

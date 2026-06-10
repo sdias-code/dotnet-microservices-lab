@@ -1,13 +1,13 @@
-using Precos.API.Endpoints;
-using Precos.API.Infrastructure;
-using Precos.API.Services;
+using Pricing.API.Endpoints;
+using Pricing.API.Infrastructure;
+using Pricing.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
-    options.InstanceName = "Precos_";
+    options.InstanceName = "Pricing_";
 });
 
 builder.Services.AddScoped<IPrecoRepository, PrecoRepository>();

@@ -1,6 +1,6 @@
-using Precos.API.Domain;
+using Pricing.API.Domain;
 
-namespace Precos.API.Infrastructure;
+namespace Pricing.API.Infrastructure;
 
 public interface IPrecoRepository
 {

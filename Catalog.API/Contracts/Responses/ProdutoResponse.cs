@@ -1,4 +1,4 @@
-namespace Catalogo.API.Contracts.Responses;
+namespace Catalog.API.Contracts.Responses;
 
 public record ProdutoResponse(
     string? Id,

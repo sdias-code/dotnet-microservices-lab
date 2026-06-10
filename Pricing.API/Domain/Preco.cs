@@ -1,4 +1,4 @@
-namespace Precos.API.Domain;
+namespace Pricing.API.Domain;
 
 public class Preco
 {

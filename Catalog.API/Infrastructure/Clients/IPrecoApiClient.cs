@@ -1,7 +1,7 @@
-using Catalogo.API.Contracts.Responses;
+using Catalog.API.Contracts.Responses;
 using Refit;
 
-namespace Catalogo.API.Infrastructure.Clients;
+namespace Catalog.API.Infrastructure.Clients;
 
 public interface IPrecoApiClient
 {

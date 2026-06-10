@@ -1,4 +1,4 @@
-namespace Catalogo.API.Contracts.Requests;
+namespace Catalog.API.Contracts.Requests;
 
 public record ProdutoRequest(
     string Nome,
