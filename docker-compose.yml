@@ -9,6 +9,11 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
     volumes:
       - mongo-data:/data/db
+    healthcheck:
+      test: [ "CMD-SHELL", "echo 'db.runCommand(\"ping\").ok' | mongosh localhost:27017/test --quiet" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   mongo-express:
     image: mongo-express:latest
@@ -20,7 +25,8 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: password
       ME_CONFIG_MONGODB_SERVER: mongodb
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
 
   redis:
     image: redis:latest
@@ -29,6 +35,11 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   redisinsight:
     image: redis/redisinsight:latest
@@ -36,7 +47,8 @@ services:
     ports:
       - "5540:5540"
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
 
   catalog-api:
     image: catalog-api:latest
@@ -45,15 +57,22 @@ services:
       context: .
       dockerfile: Catalog.API/Dockerfile
     ports:
-      - "5001:8080" # Mantém a porta 5001 para fora do Docker externa se quiser acessar direto
+      - "5001:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - Kestrel__Endpoints__Http__Url=http://*:8080 # Sobrescreve o Kestrel para ouvir na porta do container
+      - Kestrel__Endpoints__Http__Url=http://*:8080
       - ConnectionStrings__MongoDb=mongodb://admin:password@mongodb:27017
       - PricingServiceUrl=http://pricing-api:8080
     depends_on:
-      - mongodb
-      - redis
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   pricing-api:
     image: pricing-api:latest
@@ -62,13 +81,19 @@ services:
       context: .
       dockerfile: Pricing.API/Dockerfile
     ports:
-      - "5002:8080" # Mantém a porta 5002 para fora do Docker externa
+      - "5002:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - Kestrel__Endpoints__Http__Url=http://*:8080 # Sobrescreve o Kestrel para ouvir na porta do container
+      - Kestrel__Endpoints__Http__Url=http://*:8080
       - ConnectionStrings__Redis=redis:6379
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 volumes:
   mongo-data:

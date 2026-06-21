@@ -36,3 +36,9 @@ GET http://localhost:5001/detalhes-produto/6a373b3ca31b6778bc11072a
 # listar todos os produtos
 GET http://localhost:5001/produtos
 
+###
+GET http://localhost:5001/health
+
+###
+
+

@@ -23,3 +23,7 @@ GET http://localhost:5002/precos/6a373b27a31b6778bc110729
 GET http://localhost:5002/precos/6a373b3ca31b6778bc11072a
 
 
+###
+GET http://localhost:5002/health
+
+###
