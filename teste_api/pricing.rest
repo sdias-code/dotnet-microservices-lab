@@ -2,7 +2,7 @@
 POST http://localhost:5002/precos
 Content-Type: application/json
 
-{ "produtoId": "6a29eeae98595fd90b901bb7", "valor": 349.90 }
+{ "produtoId": "6a373b27a31b6778bc110729", "valor": 349.90 }
 
 ###
 
@@ -10,16 +10,16 @@ Content-Type: application/json
 POST http://localhost:5002/precos
 Content-Type: application/json
 
-{ "produtoId": "6a29eed198595fd90b901bb8", "valor": 525.50 }
+{ "produtoId": "6a373b3ca31b6778bc11072a", "valor": 525.50 }
 
 ###
 
 # listar preço do produto 1
-GET http://localhost:5002/precos/6a29eeae98595fd90b901bb7
+GET http://localhost:5002/precos/6a373b27a31b6778bc110729
 
 ###
 
 # listar preço do produto 2
-GET http://localhost:5002/precos/6a29eed198595fd90b901bb8
+GET http://localhost:5002/precos/6a373b3ca31b6778bc11072a
 
 

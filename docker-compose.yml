@@ -38,6 +38,38 @@ services:
     depends_on:
       - redis
 
+  catalog-api:
+    image: catalog-api:latest
+    container_name: catalog-api
+    build:
+      context: .
+      dockerfile: Catalog.API/Dockerfile
+    ports:
+      - "5001:8080" # Mantém a porta 5001 para fora do Docker externa se quiser acessar direto
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Kestrel__Endpoints__Http__Url=http://*:8080 # Sobrescreve o Kestrel para ouvir na porta do container
+      - ConnectionStrings__MongoDb=mongodb://admin:password@mongodb:27017
+      - PricingServiceUrl=http://pricing-api:8080
+    depends_on:
+      - mongodb
+      - redis
+
+  pricing-api:
+    image: pricing-api:latest
+    container_name: pricing-api
+    build:
+      context: .
+      dockerfile: Pricing.API/Dockerfile
+    ports:
+      - "5002:8080" # Mantém a porta 5002 para fora do Docker externa
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Kestrel__Endpoints__Http__Url=http://*:8080 # Sobrescreve o Kestrel para ouvir na porta do container
+      - ConnectionStrings__Redis=redis:6379
+    depends_on:
+      - redis
+
 volumes:
   mongo-data:
   redis-data:

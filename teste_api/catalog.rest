@@ -24,12 +24,12 @@ Content-Type: application/json
 ###
 
 # listar produto 1
-GET http://localhost:5001/detalhes-produto/6a29eeae98595fd90b901bb7
+GET http://localhost:5001/detalhes-produto/6a373b27a31b6778bc110729
 
 ###
 
 # listar produtos 2
-GET http://localhost:5001/detalhes-produto/6a29eed198595fd90b901bb8
+GET http://localhost:5001/detalhes-produto/6a373b3ca31b6778bc11072a
 
 ###
 

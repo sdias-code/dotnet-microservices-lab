@@ -18,9 +18,12 @@ builder.Services.AddSingleton<MongoContext>();
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
 
+// Pegamos a URL da configuração, se for nula, usamos o fallback do localhost
+var pricingUrl = builder.Configuration["PricingServiceUrl"] ?? "http://localhost:5002";
+
 builder.Services.AddRefitClient<IPrecoApiClient>()
-    .ConfigureHttpClient(c =>
-        c.BaseAddress = new Uri("http://localhost:5002"));
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri(pricingUrl));
+
 
 var app = builder.Build();
 
