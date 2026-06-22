@@ -1,34 +1,52 @@
 using Pricing.API.Endpoints;
 using Pricing.API.Infrastructure;
 using Pricing.API.Services;
+using Pricing.API.Consumers;
+using MassTransit;
 using Serilog;
 
-// 1. CONFIGURAÇÃO INICIAL DO LOG COM SERILOG (Pode ser feita antes do builder para capturar logs de inicialização)
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
     .CreateLogger();
 
 try
 {
-    Log.Information("Iniciando o host do Pricing.API...");
+    Log.Information("Starting Pricing.API host...");
 
     var builder = WebApplication.CreateBuilder(args);
 
-    // 2. ADICIONAR SERILOG AO HOST
     builder.Host.UseSerilog();
 
-    // 3. REGISTRO DE SERVIÇOS (DI CONTAINER)
-
-    // Cache Distribuído (Redis)
+    // Distributed Cache (Redis)
     builder.Services.AddStackExchangeRedisCache(options =>
     {
         options.Configuration = builder.Configuration.GetConnectionString("Redis");
         options.InstanceName = "Pricing_";
     });
 
-    // Camadas da Aplicação (Business / Data)
-    builder.Services.AddScoped<IPrecoRepository, PrecoRepository>();
-    builder.Services.AddScoped<IPrecoService, PrecoService>();
+    // 🆕 Mastransit configuration
+    builder.Services.AddMassTransit(x =>
+    {
+        // 1. Register the consumer
+        x.AddConsumer<ProductCreatedConsumer>();
+
+        x.UsingRabbitMq((context, cfg) =>
+        {
+            // 2. Configure the RabbitMQ address for the Docker environment.
+            cfg.Host("rabbitmq", "/", h =>
+            {
+                h.Username("guest");
+                h.Password("guest");
+            });
+
+            // 3. Create queues automatically based on registered consumers
+            cfg.ConfigureEndpoints(context);
+        });
+    });
+
+    // Application Layers (Business / Data)
+    builder.Services.AddScoped<IPriceRepository, PriceRepository>();
+    builder.Services.AddScoped<IPriceService, PriceService>();
 
     // Health Checks (Redis)
     builder.Services.AddHealthChecks()
@@ -38,24 +56,20 @@ try
             tags: ["cache"]
         );
 
-    // ----------------------------------------------------
-
     var app = builder.Build();
 
-    // 4. PIPELINE DE MIDDLEWARES (A ordem aqui importa!)
-
-    // O Log de Requisições DEVE vir antes dos Endpoints para capturar as métricas de tráfego
+    // Middleware Pipeline (Order matters!)
     app.UseSerilogRequestLogging();
 
-    // Endpoints da Aplicação e Infraestrutura
+    // Application and Infrastructure Endpoints
     app.MapHealthChecks("/health");
-    app.MapPrecoEndpoints();
+    app.MapPriceEndpoints();
 
     app.Run();
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "O host do Pricing.API terminou inesperadamente!");
+    Log.Fatal(ex, "Pricing.API host terminated unexpectedly!");
 }
 finally
 {

@@ -2,9 +2,9 @@ using Pricing.API.Contracts.Responses;
 
 namespace Pricing.API.Services;
 
-public interface IPrecoService
+public interface IPriceService
 {
-    Task<PrecoResponse?> ObterPrecoAsync(string produtoId);
+    Task<PriceResponse?> GetPriceAsync(string productId);
 
-    Task SalvarPrecoAsync(string produtoId, decimal valor);
+    Task SavePriceAsync(string productId, decimal value);
 }

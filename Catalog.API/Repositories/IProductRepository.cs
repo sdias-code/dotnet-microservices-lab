@@ -2,11 +2,11 @@ using Catalog.API.Domain;
 
 namespace Catalog.API.Repositories;
 
-public interface IProdutoRepository
+public interface IProductRepository
 {
-    Task<List<Produto>> ListarAsync();
+    Task<List<Product>> GetAllAsync();
 
-    Task<Produto?> ObterPorIdAsync(string id);
+    Task<Product?> GetByIdAsync(string id);
 
-    Task CriarAsync(Produto produto);
+    Task CreateAsync(Product product);
 }

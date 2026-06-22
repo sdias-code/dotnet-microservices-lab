@@ -4,31 +4,31 @@ using MongoDB.Driver;
 
 namespace Catalog.API.Repositories;
 
-public class ProdutoRepository : IProdutoRepository
+public class ProductRepository : IProductRepository
 {
     private readonly MongoContext _context;
 
-    public ProdutoRepository(MongoContext context)
+    public ProductRepository(MongoContext context)
     {
         _context = context;
     }
 
-    public async Task<List<Produto>> ListarAsync()
+    public async Task<List<Product>> GetAllAsync()
     {
-        return await _context.Produtos
+        return await _context.Products
             .Find(_ => true)
             .ToListAsync();
     }
 
-    public async Task<Produto?> ObterPorIdAsync(string id)
+    public async Task<Product?> GetByIdAsync(string id)
     {
-        return await _context.Produtos
+        return await _context.Products
             .Find(p => p.Id == id)
             .FirstOrDefaultAsync();
     }
 
-    public async Task CriarAsync(Produto produto)
+    public async Task CreateAsync(Product product)
     {
-        await _context.Produtos.InsertOneAsync(produto);
+        await _context.Products.InsertOneAsync(product);
     }
 }

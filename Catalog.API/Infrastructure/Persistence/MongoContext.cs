@@ -5,12 +5,12 @@ namespace Catalog.API.Infrastructure;
 
 public class MongoContext
 {
-    public IMongoCollection<Produto> Produtos { get; }
+    public IMongoCollection<Product> Products { get; }
 
     public MongoContext(IMongoClient client)
     {
-        var database = client.GetDatabase("CatalogoDb");
+        var database = client.GetDatabase("CatalogDb");
 
-        Produtos = database.GetCollection<Produto>("Produtos");
+        Products = database.GetCollection<Product>("Products");
     }
 }

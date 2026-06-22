@@ -6,30 +6,27 @@ using Catalog.API.Services;
 using MongoDB.Driver;
 using Refit;
 using Serilog;
+using MassTransit;
 
-// 1. CONFIGURAÇÃO INICIAL DO LOG COM SERILOG (Pode ser feita antes do builder para capturar logs de inicialização)
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
     .CreateLogger();
 
 try
 {
-    Log.Information("Iniciando o host do Catalog.API...");
+    Log.Information("Starting Catalog.API host...");
 
     var builder = WebApplication.CreateBuilder(args);
 
-    // 2. ADICIONAR SERILOG AO HOST
     builder.Host.UseSerilog();
 
-    // 3. REGISTRO DE SERVIÇOS (DI CONTAINER)
-
-    // Banco de Dados (MongoDB)
+    // Database (MongoDB)
     builder.Services.AddSingleton<IMongoClient>(sp =>
         new MongoClient(builder.Configuration.GetConnectionString("MongoDb")));
 
     builder.Services.AddSingleton<MongoContext>();
 
-    // Health Checks (Utiliza o IMongoClient registrado acima)
+    // Health Checks
     builder.Services.AddHealthChecks()
         .AddMongoDb(
             sp => sp.GetRequiredService<IMongoClient>(),
@@ -37,33 +34,42 @@ try
             tags: ["db", "data"]
         );
 
-    // Camadas da Aplicação (Business / Data)
-    builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
-    builder.Services.AddScoped<IProdutoService, ProdutoService>();
+    // MassTransit 8.3.6 with RabbitMQ
+    builder.Services.AddMassTransit(x =>
+    {
+        x.UsingRabbitMq((context, cfg) =>
+        {
+            var connectionString = builder.Configuration.GetConnectionString("RabbitMq")
+                                   ?? "amqp://localhost:5672";
 
-    // Integração HTTP Externa (Refit Client)
+            cfg.Host(new Uri(connectionString));
+
+            cfg.ConfigureEndpoints(context);
+        });
+    });
+
+    // Application Layers
+    builder.Services.AddScoped<IProductRepository, ProductRepository>();
+    builder.Services.AddScoped<IProductService, ProductService>();
+
+    // External HTTP Integration (Refit Client)
     var pricingUrl = builder.Configuration["PricingServiceUrl"] ?? "http://localhost:5002";
-    builder.Services.AddRefitClient<IPrecoApiClient>()
+    builder.Services.AddRefitClient<IPriceApiClient>()
         .ConfigureHttpClient(c => c.BaseAddress = new Uri(pricingUrl));
-
-    // ----------------------------------------------------
 
     var app = builder.Build();
 
-    // 4. PIPELINE DE MIDDLEWARES (A ordem aqui é estrita!)
-
-    // O Log de Requisições DEVE vir antes dos Endpoints para capturar as métricas de tráfego
+    // Middleware Pipeline
     app.UseSerilogRequestLogging();
 
-    // Endpoints da Aplicação e Infraestrutura
     app.MapHealthChecks("/health");
-    app.MapProdutoEndpoints();
+    app.MapProductEndpoints();
 
     app.Run();
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "O host terminou inesperadamente!");
+    Log.Fatal(ex, "Host terminated unexpectedly!");
 }
 finally
 {

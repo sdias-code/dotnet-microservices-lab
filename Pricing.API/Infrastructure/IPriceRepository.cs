@@ -2,9 +2,9 @@ using Pricing.API.Domain;
 
 namespace Pricing.API.Infrastructure;
 
-public interface IPrecoRepository
+public interface IPriceRepository
 {
-    Task<Preco?> ObterPorIdAsync(string produtoId);
+    Task<Price?> GetByIdAsync(string productId);
 
-    Task SalvarAsync(Preco preco);
+    Task SaveAsync(Price price);
 }

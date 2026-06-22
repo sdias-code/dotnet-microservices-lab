@@ -3,8 +3,8 @@ using Refit;
 
 namespace Catalog.API.Infrastructure.Clients;
 
-public interface IPrecoApiClient
+public interface IPriceApiClient
 {
-    [Get("/precos/{produtoId}")]
-    Task<PrecoResponse> ObterPrecoPorIdAsync(string produtoId);
+    [Get("/prices/{productId}")]
+    Task<PriceResponse> GetPriceByIdAsync(string productId);
 }

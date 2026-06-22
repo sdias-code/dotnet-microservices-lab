@@ -3,43 +3,43 @@ using Pricing.API.Services;
 
 namespace Pricing.API.Endpoints;
 
-public static class PrecoEndpoints
+public static class PriceEndpoints
 {
-    public static void MapPrecoEndpoints(this WebApplication app)
+    public static void MapPriceEndpoints(this WebApplication app)
     {
-        app.MapGet("/precos/{produtoId}", ObterPreco);
+        app.MapGet("/prices/{productId}", GetPrice);
 
-        app.MapPost("/precos", SalvarPreco);
+        app.MapPost("/prices", SavePrice);
     }
 
-    private static async Task<IResult> ObterPreco(
-        string produtoId,
-        IPrecoService precoService)
+    private static async Task<IResult> GetPrice(
+        string productId,
+        IPriceService priceService)
     {
-        var preco = await precoService.ObterPrecoAsync(produtoId);
+        var price = await priceService.GetPriceAsync(productId);
 
-        if (preco is null)
+        if (price is null)
         {
             return Results.NotFound(new
             {
-                Mensagem = "Preço não localizado para este produto no Redis."
+                Message = "Price not found for this product in Redis."
             });
         }
 
-        return Results.Ok(preco);
+        return Results.Ok(price);
     }
 
-    private static async Task<IResult> SalvarPreco(
-        PrecoRequest request,
-        IPrecoService precoService)
+    private static async Task<IResult> SavePrice(
+        PriceRequest request,
+        IPriceService priceService)
     {
-        await precoService.SalvarPrecoAsync(
-            request.ProdutoId,
-            request.Valor
+        await priceService.SavePriceAsync(
+            request.ProductId,
+            request.Value
         );
 
         return Results.Created(
-            $"/precos/{request.ProdutoId}",
+            $"/prices/{request.ProductId}",
             request
         );
     }

@@ -1,7 +1,7 @@
 services:
   mongodb:
     image: mongo:latest
-    container_name: meu-mongodb
+    container_name: mongodb
     ports:
       - "27017:27017"
     environment:
@@ -17,7 +17,7 @@ services:
 
   mongo-express:
     image: mongo-express:latest
-    container_name: meu-mongo-express
+    container_name: mongo-express
     ports:
       - "8081:8081"
     environment:
@@ -30,7 +30,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: meu-redis
+    container_name: redis
     ports:
       - "6379:6379"
     volumes:
@@ -43,12 +43,27 @@ services:
 
   redisinsight:
     image: redis/redisinsight:latest
-    container_name: meu-redisinsight
+    container_name: redis-insight
     ports:
       - "5540:5540"
     depends_on:
       redis:
         condition: service_healthy
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" # AMQP communication port for APIs
+      - "15672:15672" # RabbitMQ management UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   catalog-api:
     image: catalog-api:latest
@@ -62,12 +77,15 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kestrel__Endpoints__Http__Url=http://*:8080
       - ConnectionStrings__MongoDb=mongodb://admin:password@mongodb:27017
+      - ConnectionStrings__RabbitMq=amqp://guest:guest@rabbitmq:5672
       - PricingServiceUrl=http://pricing-api:8080
     depends_on:
       mongodb:
         condition: service_healthy
       redis:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy # Start only after RabbitMQ is healthy
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health" ]
       interval: 10s
@@ -86,9 +104,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kestrel__Endpoints__Http__Url=http://*:8080
       - ConnectionStrings__Redis=redis:6379
+      - ConnectionStrings__RabbitMq=amqp://guest:guest@rabbitmq:5672
     depends_on:
       redis:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy # Start only after RabbitMQ is healthy
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health" ]
       interval: 10s

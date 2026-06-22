@@ -1,10 +1,10 @@
 namespace Pricing.API.Domain;
 
-public class Preco
+public class Price
 {
-    public string ProdutoId { get; set; } = string.Empty;
+    public string ProductId { get; set; } = string.Empty;
 
-    public decimal Valor { get; set; }
+    public decimal Value { get; set; }
 
-    public string Moeda { get; set; } = "BRL";
+    public string Currency { get; set; } = "BRL";
 }

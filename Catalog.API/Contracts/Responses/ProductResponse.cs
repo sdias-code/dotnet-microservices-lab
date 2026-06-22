@@ -1,9 +1,9 @@
 namespace Catalog.API.Contracts.Responses;
 
-public record ProdutoResponse(
+public record ProductResponse(
     string? Id,
-    string Nome,
-    string Descricao,
-    decimal Preco,
-    string Moeda
+    string Name,
+    string Description,
+    decimal Price,
+    string Currency
 );

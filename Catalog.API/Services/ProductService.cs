@@ -3,27 +3,27 @@ using Catalog.API.Repositories;
 
 namespace Catalog.API.Services;
 
-public class ProdutoService : IProdutoService
+public class ProductService : IProductService
 {
-    private readonly IProdutoRepository _repository;
+    private readonly IProductRepository _repository;
 
-    public ProdutoService(IProdutoRepository repository)
+    public ProductService(IProductRepository repository)
     {
         _repository = repository;
     }
 
-    public async Task<List<Produto>> ListarAsync()
+    public async Task<List<Product>> GetAllAsync()
     {
-        return await _repository.ListarAsync();
+        return await _repository.GetAllAsync();
     }
 
-    public async Task<Produto?> ObterPorIdAsync(string id)
+    public async Task<Product?> GetByIdAsync(string id)
     {
-        return await _repository.ObterPorIdAsync(id);
+        return await _repository.GetByIdAsync(id);
     }
 
-    public async Task CriarAsync(Produto produto)
+    public async Task CreateAsync(Product product)
     {
-        await _repository.CriarAsync(produto);
+        await _repository.CreateAsync(product);
     }
 }

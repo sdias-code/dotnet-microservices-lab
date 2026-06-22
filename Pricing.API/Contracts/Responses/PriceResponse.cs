@@ -1,7 +1,7 @@
 namespace Pricing.API.Contracts.Responses;
 
-public record PrecoResponse(
-    string ProdutoId,
-    decimal Valor,
-    string Moeda
+public record PriceResponse(
+    string ProductId,
+    decimal Value,
+    string Currency
 );

@@ -4,38 +4,38 @@ using Pricing.API.Infrastructure;
 
 namespace Pricing.API.Services;
 
-public class PrecoService : IPrecoService
+public class PriceService : IPriceService
 {
-    private readonly IPrecoRepository _repository;
+    private readonly IPriceRepository _repository;
 
-    public PrecoService(IPrecoRepository repository)
+    public PriceService(IPriceRepository repository)
     {
         _repository = repository;
     }
 
-    public async Task<PrecoResponse?> ObterPrecoAsync(string produtoId)
+    public async Task<PriceResponse?> GetPriceAsync(string productId)
     {
-        var preco = await _repository.ObterPorIdAsync(produtoId);
+        var price = await _repository.GetByIdAsync(productId);
 
-        if (preco is null)
+        if (price is null)
             return null;
 
-        return new PrecoResponse(
-            preco.ProdutoId,
-            preco.Valor,
-            preco.Moeda
+        return new PriceResponse(
+            price.ProductId,
+            price.Value,
+            price.Currency
         );
     }
 
-    public async Task SalvarPrecoAsync(string produtoId, decimal valor)
+    public async Task SavePriceAsync(string productId, decimal value)
     {
-        var preco = new Preco
+        var price = new Price
         {
-            ProdutoId = produtoId,
-            Valor = valor,
-            Moeda = "BRL"
+            ProductId = productId,
+            Value = value,
+            Currency = "BRL"
         };
 
-        await _repository.SalvarAsync(preco);
+        await _repository.SaveAsync(price);
     }
 }

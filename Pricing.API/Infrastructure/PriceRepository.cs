@@ -4,40 +4,40 @@ using Pricing.API.Domain;
 
 namespace Pricing.API.Infrastructure;
 
-public class PrecoRepository : IPrecoRepository
+public class PriceRepository : IPriceRepository
 {
     private readonly IDistributedCache _cache;
 
-    public PrecoRepository(IDistributedCache cache)
+    public PriceRepository(IDistributedCache cache)
     {
         _cache = cache;
     }
 
-    public async Task<Preco?> ObterPorIdAsync(string produtoId)
+    public async Task<Price?> GetByIdAsync(string productId)
     {
-        var precoSalvo = await _cache.GetStringAsync(produtoId);
+        var savedPrice = await _cache.GetStringAsync(productId);
 
-        if (string.IsNullOrEmpty(precoSalvo))
+        if (string.IsNullOrEmpty(savedPrice))
             return null;
 
-        var sucesso = decimal.TryParse(
-            precoSalvo,
+        var success = decimal.TryParse(
+            savedPrice,
             CultureInfo.InvariantCulture,
-            out var valor
+            out var value
         );
 
-        if (!sucesso)
+        if (!success)
             return null;
 
-        return new Preco
+        return new Price
         {
-            ProdutoId = produtoId,
-            Valor = valor,
-            Moeda = "BRL"
+            ProductId = productId,
+            Value = value,
+            Currency = "BRL"
         };
     }
 
-    public async Task SalvarAsync(Preco preco)
+    public async Task SaveAsync(Price price)
     {
         var options = new DistributedCacheEntryOptions
         {
@@ -45,8 +45,8 @@ public class PrecoRepository : IPrecoRepository
         };
 
         await _cache.SetStringAsync(
-            preco.ProdutoId,
-            preco.Valor.ToString(CultureInfo.InvariantCulture),
+            price.ProductId,
+            price.Value.ToString(CultureInfo.InvariantCulture),
             options
         );
     }
