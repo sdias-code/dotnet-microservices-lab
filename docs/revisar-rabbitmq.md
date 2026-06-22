@@ -82,5 +82,5 @@ Para validar se o ecossistema está funcionando com maestria, siga este roteiro 
    * O resultado deve retornar o JSON unificado exibindo os dados do catálogo e o valor `0` que o consumidor salvou de forma automática no Redis.
 
 ------------------------------
-Quando estiver pronto para continuar os testes ou quiser partir para as políticas de resiliência do Polly, me avise para darmos o próximo passo.
+
 
