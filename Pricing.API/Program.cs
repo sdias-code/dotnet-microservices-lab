@@ -39,14 +39,25 @@ try
                 h.Password("guest");
             });
 
-            // 3. Configure message retry policy
-            cfg.UseMessageRetry(r =>
-       {          
-           r.Interval(3, TimeSpan.FromSeconds(2));
-       });
+            // 🆕 1. ACTIVATE THE NATIVE SCHEDULING OF RABBITMQ
+            cfg.UseDelayedMessageScheduler();
 
-            // 4. Create queues automatically based on registered consumers
-            cfg.ConfigureEndpoints(context);
+            // 🆕 2. CONFIGURATION OF THE DLQ / REDELIVERY POLICY
+            cfg.ReceiveEndpoint("Pricing.API.Consumers:ProductCreatedConsumer", e =>
+            {
+                // Level 1: If it fails, try 3 times in a row waiting 2 seconds between them
+                e.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(2)));
+
+                // Level 2 (Redelivery): If the 3 attempts fail, schedule the message retransmission.
+                // It will attempt to reprocess 3 more times, but waiting 1 minute between each grand attempt.
+                e.UseScheduledRedelivery(r => r.Intervals(
+                    TimeSpan.FromMinutes(1),
+                    TimeSpan.FromMinutes(2),
+                    TimeSpan.FromMinutes(3)
+                ));
+
+                e.ConfigureConsumer<ProductCreatedConsumer>(context);
+            });
         });
     });
 

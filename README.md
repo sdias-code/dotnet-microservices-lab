@@ -10,16 +10,16 @@ The project evolves through multiple modules, covering service-to-service commun
 - MongoDB
 - Redis
 - Refit
-- Docker
-- RabbitMQ
-- Kubernetes
+- Docker & Docker Compose
+- RabbitMQ & MassTransit (Pub/Sub)
+- Resilience Patterns (Polly v8)
+- Dead Letter Queues (DLQ) & Scheduled Redelivery
 - Cloud-Native Architecture
 - Distributed Systems Patterns
 
-
 ## Module 1 — Microservices Fundamentals and Synchronous Communication
 
-In this first module, a basic microservices architecture was implemented using .NET 10, focusing on separation of concerns, distributed persistence, and inter-service communication.
+In this first module, a basic microservices architecture was implemented using .NET, focusing on separation of concerns, distributed persistence, and inter-service communication.
 
 The solution is composed of two independent microservices:
 
@@ -29,32 +29,33 @@ The solution is composed of two independent microservices:
 Communication between the services was implemented synchronously over HTTP using Refit, allowing the Catalog service to retrieve pricing information directly from the specialized Pricing service.
 
 ### Key Implementations
-
 * Microservices-based architecture
 * APIs built with ASP.NET Core Minimal APIs
 * Data persistence with MongoDB
 * Distributed caching with Redis
 * Inter-service communication using Refit
-* Dependency Injection
-* Repository Pattern
-* Service Layer
 * Containerization with Docker
 
-### Skills and Concepts Developed
+---
 
-* Microservices design and separation of responsibilities
-* Synchronous service-to-service communication
-* NoSQL data persistence with MongoDB
-* Distributed caching strategies with Redis
-* Building modern APIs using Minimal APIs
-* Structuring .NET applications following architectural best practices
+## Module 2 — Event-Driven Architecture and Resilience 🆕
 
+In the second module, the architecture evolved into an asynchronous, event-driven ecosystem. The communication became decoupled through a message broker, ensuring that high-throughput operations do not choke the system, while advanced resilience frameworks protect the application from cascading failures and network partitions.
 
+### Key Implementations
+* **Asynchronous Messaging**: Implemented the Publish/Subscribe pattern using **RabbitMQ** as the message broker and **MassTransit** as the high-level abstraction library.
+* **Eventual Consistency**: When a product is saved in the Catalog database, a `ProductCreatedEvent` is published, causing the Pricing service to automatically initialize a default price in Redis asynchronously.
+* **Advanced Error Handling & DLQ**: Configured an automated **Scheduled Redelivery** mechanism using RabbitMQ delayed message exchanges, creating active retry windows before routing corrupted or unprocessable messages to a permanent **Dead Letter Queue (DLQ)**.
+* **HTTP Fault Tolerance**: Injected **Polly v8** standard resilience handlers into the Refit HTTP pipeline, applying Exponential Backoff Retries, a 30-second Request Timeout strategy, and a **Circuit Breaker** to safe-guard communication when endpoints become transiently unavailable.
+* **Infrastructure Reliability**: Adjusted Kestrel and StackExchange.Redis drivers with non-blocking failover routines (`abortConnect=false`) and automated Docker Compose health-checks to enable seamless environment self-healing.
+
+> 📄 For an in-depth look at how these strategies handle infrastructure crashes and network failures, check out the specialized [Resilience & DLQ Documentation](docs/dlq.md).
+
+---
 
 ## Roadmap
 
 ### Module 1 — Synchronous Communication ✅
-
 * [x] Catalog.API
 * [x] Pricing.API
 * [x] MongoDB Persistence
@@ -62,23 +63,21 @@ Communication between the services was implemented synchronously over HTTP using
 * [x] Refit HTTP Client
 * [x] Docker Containers
 
-### Module 2 — Event-Driven Architecture 🚧
+### Module 2 — Event-Driven Architecture ✅ 🆕
+* [x] RabbitMQ Integration
+* [x] MassTransit Abstraction
+* [x] Asynchronous Communication (Pub/Sub)
+* [x] Resilience Patterns (Polly & Circuit Breaker)
+* [x] Active Dead Letter Queues (DLQ) & Redelivery
 
-* [ ] RabbitMQ
-* [ ] Asynchronous Communication
-* [ ] Publish/Subscribe Pattern
-* [ ] Resilience Patterns
-
-### Module 3 — Container Orchestration 📅
-
-* [ ] Kubernetes
-* [ ] Observability
-* [ ] Health Checks
-* [ ] Scalability
+### Module 3 — Container Orchestration 🚧
+* [ ] Kubernetes Deployment
+* [ ] Advanced Health Checks & Probes
+* [ ] Observability & Metrics
+* [ ] Scalability & Load Balancing
 
 ### Module 4 — Cloud-Native Deployment 📅
-
 * [ ] Cloud Deployment
 * [ ] CI/CD Pipeline
-* [ ] Monitoring
+* [ ] Monitoring & Distributed Tracing
 * [ ] Production Environment

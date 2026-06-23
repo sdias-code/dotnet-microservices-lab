@@ -6,6 +6,7 @@ using Catalog.API.Services;
 using Refit;
 using MassTransit;
 using MongoDB.Bson;
+using Polly.Timeout;
 
 namespace Catalog.API.Endpoints;
 
@@ -78,7 +79,7 @@ public static class ProductEndpoints
         }
 
         try
-        { 
+        {
             // Resilient call via Polly + Refit
             var price = await priceClient.GetPriceByIdAsync(id);
 
@@ -100,15 +101,19 @@ public static class ProductEndpoints
         {
             return Results.Problem(detail: "Pricing service returned an error.", statusCode: 502);
         }
+
         // 🆕 Scenario 3: The container is down or the network failed (Captures the HttpRequestException you received!)
         // 🆕 Scenario 4: The timeout expired (Polly Timeout via TaskCanceledException)
-        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        // 🆕 Scenario 5: The timeout expired (Polly Timeout via TimeoutRejectedException)
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or TimeoutRejectedException)
         {
             return Results.Problem(
-                detail: "Pricing service is completely unavailable or network timeout occurred.",
+                detail: "Pricing service is completely unavailable or a global network timeout occurred.",
                 statusCode: 503
             );
         }
+
+
 
     }
 }

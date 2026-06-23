@@ -104,7 +104,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kestrel__Endpoints__Http__Url=http://*:8080
-      - ConnectionStrings__Redis=redis:6379
+      - ConnectionStrings__Redis=redis:6379, abortConnect=false,connectRetry=5
       - ConnectionStrings__RabbitMq=amqp://guest:guest@rabbitmq:5672
     depends_on:
       redis:

@@ -6,7 +6,7 @@ POST http://localhost:5001/products
 Content-Type: application/json
 
 {
-  "name": "Mouse 3 buttons",
+  "name": "Mouse 3 buttons NEWTOP",
   "description": "Mouse with 3 buttons and 1 wheel and USB connection"
 }
 
@@ -24,7 +24,7 @@ Content-Type: application/json
 ###
 
 # listar produto 1
-GET http://localhost:5001/products/6a39dbbde87cbe4198e72462
+GET http://localhost:5001/products/6a39ee063327bac8b4c35844
 
 ###
 
