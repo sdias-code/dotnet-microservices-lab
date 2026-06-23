@@ -17,14 +17,14 @@ POST http://localhost:5001/products
 Content-Type: application/json
 
 {
-  "name": "Webcam 1080p",
-  "description": "Webcam with 1080p resolution and built-in microphone"
+  "name": "Webcam 1080p Logintech C920",
+  "description": "Webcam with 1080p resolution and built-in microphone, perfect for video calls and streaming"
 }
 
 ###
 
 # listar produto 1
-GET http://localhost:5001/products/6a39bf256977d602a9eb8536
+GET http://localhost:5001/products/6a39dbbde87cbe4198e72462
 
 ###
 

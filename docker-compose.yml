@@ -35,6 +35,7 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    command: redis-server --appendonly yes
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
@@ -54,8 +55,8 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq
     ports:
-      - "5672:5672" # AMQP communication port for APIs
-      - "15672:15672" # RabbitMQ management UI port
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
@@ -85,7 +86,7 @@ services:
       redis:
         condition: service_healthy
       rabbitmq:
-        condition: service_healthy # Start only after RabbitMQ is healthy
+        condition: service_healthy
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health" ]
       interval: 10s
@@ -109,7 +110,7 @@ services:
       redis:
         condition: service_healthy
       rabbitmq:
-        condition: service_healthy # Start only after RabbitMQ is healthy
+        condition: service_healthy
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health" ]
       interval: 10s

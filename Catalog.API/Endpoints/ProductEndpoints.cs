@@ -78,47 +78,37 @@ public static class ProductEndpoints
         }
 
         try
-        {
+        { 
+            // Resilient call via Polly + Refit
             var price = await priceClient.GetPriceByIdAsync(id);
 
             if (price is null)
             {
-                return Results.Ok(new
-                {
-                    product.Id,
-                    product.Name,
-                    product.Description,
-                    Warning = "Price not yet registered."
-                });
+                return Results.Ok(new { product.Id, product.Name, product.Description, Notice = "Price not registered yet." });
             }
 
-            var productResponse = new ProductResponse(
-                product.Id,
-                product.Name,
-                product.Description,
-                price.Value,
-                price.Currency
-            );
-
+            var productResponse = new ProductResponse(product.Id, product.Name, product.Description, price.Value, price.Currency);
             return Results.Ok(productResponse);
         }
-        catch (ApiException ex)
-            when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        // Scenario 1: The service responded, but with an error (e.g., 404 Not Found)
+        catch (ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            return Results.Ok(new
-            {
-                product.Id,
-                product.Name,
-                product.Description,
-                Warning = "Price not yet registered."
-            });
+            return Results.Ok(new { product.Id, product.Name, product.Description, Notice = "Price not registered yet." });
         }
+        // Scenario 2: Any other HTTP error returned by the pricing service (e.g., 500)
         catch (ApiException)
         {
+            return Results.Problem(detail: "Pricing service returned an error.", statusCode: 502);
+        }
+        // 🆕 Scenario 3: The container is down or the network failed (Captures the HttpRequestException you received!)
+        // 🆕 Scenario 4: The timeout expired (Polly Timeout via TaskCanceledException)
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
             return Results.Problem(
-                detail: "Pricing service unavailable.",
+                detail: "Pricing service is completely unavailable or network timeout occurred.",
                 statusCode: 503
             );
         }
+
     }
 }

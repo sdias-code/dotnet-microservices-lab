@@ -39,7 +39,13 @@ try
                 h.Password("guest");
             });
 
-            // 3. Create queues automatically based on registered consumers
+            // 3. Configure message retry policy
+            cfg.UseMessageRetry(r =>
+       {          
+           r.Interval(3, TimeSpan.FromSeconds(2));
+       });
+
+            // 4. Create queues automatically based on registered consumers
             cfg.ConfigureEndpoints(context);
         });
     });

@@ -2,7 +2,7 @@
 POST http://localhost:5002/prices
 Content-Type: application/json
 
-{ "productId": "6a39bf256977d602a9eb8536", "value": 35.90 }
+{ "productId": "6a39ad29bc352605b53472d7", "value": 228.90 }
 
 ###
 
@@ -15,7 +15,7 @@ Content-Type: application/json
 ###
 
 # list price of product 1
-GET http://localhost:5002/prices/6a39bf256977d602a9eb8536
+GET http://localhost:5002/prices/6a39c4286977d602a9eb8538
 
 ###
 

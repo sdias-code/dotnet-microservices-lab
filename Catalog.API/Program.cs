@@ -7,6 +7,7 @@ using MongoDB.Driver;
 using Refit;
 using Serilog;
 using MassTransit;
+using Polly;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}")
@@ -54,8 +55,18 @@ try
 
     // External HTTP Integration (Refit Client)
     var pricingUrl = builder.Configuration["PricingServiceUrl"] ?? "http://localhost:5002";
+    
     builder.Services.AddRefitClient<IPriceApiClient>()
-        .ConfigureHttpClient(c => c.BaseAddress = new Uri(pricingUrl));
+        .ConfigureHttpClient(c => c.BaseAddress = new Uri(pricingUrl))
+        .AddStandardResilienceHandler(options =>
+    {
+        options.Retry.MaxRetryAttempts = 3;
+        options.Retry.Delay = TimeSpan.FromSeconds(1);
+        options.Retry.BackoffType = DelayBackoffType.Exponential;
+
+        options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(30);
+        options.CircuitBreaker.FailureRatio = 0.5;
+    });
 
     var app = builder.Build();
 
