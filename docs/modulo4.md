@@ -38,7 +38,9 @@ Neste módulo, nosso objetivo é elevar a maturidade do nosso cluster Kubernetes
                [ mongodb-service ]       [ redis-service ]
 
 ------------------------------
-## 🎯 Core Objectives & Deliverables## 1. Configuration Management (ConfigMaps & Secrets)
+## 🎯 Core Objectives & Deliverables
+
+## 1. Configuration Management (ConfigMaps & Secrets)
 
 * ConfigMaps: Extract non-sensitive application settings (such as environment names, target service URLs, and logging levels) into centralized k8s ConfigMap objects.
 * Secrets: Securely encrypt database connection strings, root passwords, and message broker credentials using base64 k8s Secrets, mounting them safely as environment variables into .NET containers.
