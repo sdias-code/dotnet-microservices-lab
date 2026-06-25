@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog-api
+  template:
+    metadata:
+      labels:
+        app: catalog-api
+    spec:
+      containers:
+        - name: catalog-api
+          image: sdiascode/catalog-api:latest # Pulls the latest image directly from Docker Hub
+          ports:
+            - containerPort: 8080
+
+          # Resource management to guarantee environment stability and avoid noisy neighbors
+          resources:
+            requests:
+              memory: "128Mi" # Guaranteed initial memory allocation
+              cpu: "100m" # Guaranteed initial CPU allocation (10% of 1 core)
+            limits:
+              memory: "256Mi" # Hard maximum memory limit (restarts pod if exceeded)
+              cpu: "500m" # Hard maximum CPU limit (throttles performance if exceeded)
+
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: Kestrel__Endpoints__Http__Url
+              value: "http://*:8080"
+            - name: ConnectionStrings__MongoDb
+              value: "mongodb://admin:password@mongodb-service:27017"
+            - name: ConnectionStrings__RabbitMq
+              value: "amqp://guest:guest@rabbitmq-service:5672"
+            - name: PricingServiceUrl
+              value: "http://pricing-api-service:8080"
+
+          # Native resilience configurations (Self-Healing mechanism)
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15 # Delay to allow .NET runtime boot up sequence
+            periodSeconds: 10 # Checking interval frequency
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10 # Delay before verifying traffic readiness
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-api-service
+spec:
+  selector:
+    app: catalog-api
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

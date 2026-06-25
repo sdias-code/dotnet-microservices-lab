@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pricing-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pricing-api
+  template:
+    metadata:
+      labels:
+        app: pricing-api
+    spec:
+      containers:
+        - name: pricing-api
+          image: sdiascode/pricing-api:latest # Baixa direto do seu Docker Hub
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: Kestrel__Endpoints__Http__Url
+              value: "http://*:8080"
+            - name: ConnectionStrings__Redis
+              value: "redis-service:6379,abortConnect=false,connectRetry=5"
+            - name: ConnectionStrings__RabbitMq
+              value: "amqp://guest:guest@rabbitmq-service:5672"
+          
+          # Configuração das Probes de Resiliência (Self-Healing)
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15 # Tempo de espera para o startup do .NET
+            periodSeconds: 10       # Intervalo entre as checagens de travamento
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10 # Tempo de espera para checar se aceita tráfego
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pricing-api-service
+spec:
+  selector:
+    app: pricing-api
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

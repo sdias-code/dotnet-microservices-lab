@@ -33,11 +33,23 @@ try
         x.UsingRabbitMq((context, cfg) =>
         {
             // 2. Configure the RabbitMQ address for the Docker environment.
-            cfg.Host("rabbitmq", "/", h =>
+
+            //  Fetch the amqp:// string from appsettings/environment variable
+            var rabbitUri = builder.Configuration.GetConnectionString("RabbitMq");
+
+            if (!string.IsNullOrEmpty(rabbitUri))
             {
-                h.Username("guest");
-                h.Password("guest");
-            });
+                cfg.Host(new Uri(rabbitUri));
+            }
+            else
+            {
+                // Fallback case if not found (local environment)
+                cfg.Host("rabbitmq", "/", h =>
+                {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
+            }
 
             // 🆕 1. ACTIVATE THE NATIVE SCHEDULING OF RABBITMQ
             cfg.UseDelayedMessageScheduler();

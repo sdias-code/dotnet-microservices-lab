@@ -1,0 +1,31 @@
+# usando rest client com o Kubernetes Ingress (Pricing.API)
+# https://visualstudio.com
+
+# create price for product 1
+POST http://api.local/api/pricing/prices
+Content-Type: application/json
+
+{ "productId": "6a3ca03ebb3c63948fb7e9b3", "value": 228.90 }
+
+###
+
+# create price for product 2
+POST http://api.local/api/pricing/prices
+Content-Type: application/json
+
+{ "productId": "6a39ad29bc352605b53472d7", "value": 355.50 }
+
+###
+
+# list price of product 1
+GET http://api.local/api/pricing/prices/6a3ca03ebb3c63948fb7e9b3
+
+###
+
+# list price of product 2
+GET http://api.local/api/pricing/prices/6a39ad29bc352605b53472d7
+
+###
+
+# health check de pricing via ingress
+GET http://api.local

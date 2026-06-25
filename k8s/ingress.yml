@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true" # 1. Activates regex support
+spec:
+  ingressClassName: nginx # Formalizes the link to the Minikube controller
+  rules:
+    - host: api.local
+      http:
+        paths:
+          - path: /api/catalog/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: catalog-api-service
+                port:
+                  number: 8080
+          - path: /api/pricing/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: pricing-api-service
+                port:
+                  number: 8080

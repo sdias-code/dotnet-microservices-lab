@@ -1,0 +1,42 @@
+# usando rest client com o Kubernetes Ingress
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+### cadastrar um produto
+POST http://api.local/api/catalog/products
+Content-Type: application/json
+
+{
+  "name": "Mouse 3 buttons NEWTOP",
+  "description": "Mouse with 3 buttons and 1 wheel and USB connection"
+}
+
+###
+
+### cadastrar produto 2
+POST http://api.local/api/catalog/products
+Content-Type: application/json
+
+{
+  "name": "Webcam 1080p Logintech C920",
+  "description": "Webcam with 1080p resolution and built-in microphone, perfect for video calls and streaming"
+}
+
+###
+
+# listar produto 1
+GET http://api.local/api/catalog/products/6a3ca03ebb3c63948fb7e9b3
+
+###
+
+# listar produtos 2
+GET http://api.local/api/catalog/products/6a39ad29bc352605b53472d7
+
+###
+
+# listar todos os produtos
+GET http://api.local/api/catalog/products
+
+###
+
+# health check do catalogo via ingress
+GET http://api.local/api/catalog/health
